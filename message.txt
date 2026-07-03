@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="he">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>המסע למסחר יומי עם גבריאל | ליווי אישי לסוחרים צעירים</title>
+<meta name="description" content="תוכנית ליווי אישית למסחר יומי עם המנטור גבריאל — מסחר חי, ניהול סיכונים ופסיכולוגיית מסחר ליזמים צעירים ושאפתנים.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@700;800;900&family=Heebo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #050807;
+    --surface: #0B100D;
+    --emerald: #34D399;
+    --emerald-deep: #10B981;
+    --ruby: #E1405A;
+    --champagne: #F5EFE0;
+    --text: #F5EFE0;
+    --muted: #9DA89F;
+    --glass-border: rgba(245, 239, 224, 0.18);
+    --z-canvas: 0;
+    --z-overlay: 10;
+    --z-content: 20;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html, body{ height: 100%; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Heebo', system-ui, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  #waves{
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: var(--z-canvas);
+  }
+  .bg-overlay{
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-overlay);
+    pointer-events: none;
+    background:
+      radial-gradient(ellipse 70% 80% at 50% 46%, rgba(5,8,7,0.15) 0%, rgba(5,8,7,0.55) 85%),
+      linear-gradient(180deg, rgba(5,8,7,0.4) 0%, rgba(5,8,7,0.08) 45%, rgba(5,8,7,0.45) 100%);
+  }
+
+  .shell{
+    position: relative;
+    z-index: var(--z-content);
+    height: 100vh;
+    height: 100svh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 18px 32px 14px;
+  }
+  .stage{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    gap: 0;
+  }
+
+  @keyframes cineText{
+    from{ opacity: 0; transform: translateY(26px); filter: blur(10px); letter-spacing: 0.12em; }
+    to{ opacity: 1; transform: translateY(0); filter: blur(0); letter-spacing: normal; }
+  }
+  @keyframes cineCard{
+    from{ opacity: 0; transform: translateY(56px) scale(0.96); }
+    to{ opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes cineBtn{
+    0%{ opacity: 0; transform: scale(0.55); }
+    65%{ opacity: 1; transform: scale(1.07); }
+    100%{ opacity: 1; transform: scale(1); }
+  }
+  .cine{
+    opacity: 0;
+    animation: cineText 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+  .cine-card{
+    opacity: 0;
+    animation: cineCard 1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+  .cine-btn{
+    opacity: 0;
+    animation: cineBtn 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation-delay: var(--d, 0s);
+  }
+
+  .eyebrow{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    color: var(--emerald);
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    background: rgba(52, 211, 153, 0.07);
+    padding: 5px 14px;
+    border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  h1{
+    font-family: 'Rubik', 'Heebo', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.9rem, 3.4vw, 2.9rem);
+    line-height: 1.2;
+    text-shadow: 0 4px 30px rgba(5, 8, 7, 0.9);
+  }
+  h1 .highlight{
+    color: var(--emerald);
+    text-shadow: 0 0 30px rgba(52, 211, 153, 0.5);
+  }
+  h1 .accent{
+    color: var(--ruby);
+    text-shadow: 0 0 26px rgba(225, 64, 90, 0.45);
+  }
+  .sub{
+    font-size: clamp(0.94rem, 1.3vw, 1.06rem);
+    color: var(--muted);
+    max-width: 64ch;
+    margin: 12px auto 0;
+  }
+  .sub strong{ color: var(--text); font-weight: 600; }
+
+  .bullets{
+    list-style: none;
+    margin-top: 18px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px 22px;
+  }
+  .bullets li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--text);
+    font-weight: 500;
+    font-size: 0.9rem;
+  }
+  .bullets .icon{
+    flex: 0 0 32px;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9px;
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.22);
+    color: var(--emerald);
+  }
+  .bullets li:nth-child(2) .icon{
+    background: rgba(225, 64, 90, 0.1);
+    border-color: rgba(225, 64, 90, 0.25);
+    color: var(--ruby);
+  }
+  .bullets .icon svg{ width: 17px; height: 17px; }
+
+  .form-wrap{
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 620px;
+    margin: 22px auto 0;
+    background: linear-gradient(150deg,
+      rgba(255, 255, 255, 0.10) 0%,
+      rgba(255, 255, 255, 0.03) 35%,
+      rgba(52, 211, 153, 0.05) 70%,
+      rgba(255, 255, 255, 0.06) 100%);
+    backdrop-filter: blur(26px) saturate(170%);
+    -webkit-backdrop-filter: blur(26px) saturate(170%);
+    border: 1px solid var(--glass-border);
+    border-radius: 26px;
+    padding: 24px 28px 22px;
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.65),
+      0 0 50px rgba(52, 211, 153, 0.07),
+      inset 0 1px 0 rgba(255, 255, 255, 0.28),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.06);
+  }
+  .form-wrap::before{
+    content: '';
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 46%;
+    border-radius: 26px 26px 50% 50% / 26px 26px 28% 28%;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0) 90%);
+    pointer-events: none;
+  }
+  @keyframes sheen{
+    0%{ transform: translateX(-160%) skewX(-18deg); }
+    100%{ transform: translateX(360%) skewX(-18deg); }
+  }
+  .form-wrap::after{
+    content: '';
+    position: absolute;
+    top: -20%;
+    bottom: -20%;
+    width: 34%;
+    left: 0;
+    background: linear-gradient(105deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.055) 50%,
+      rgba(255, 255, 255, 0) 100%);
+    animation: sheen 7s ease-in-out infinite;
+    animation-delay: 3.6s;
+    pointer-events: none;
+  }
+  .form-wrap h2{
+    font-family: 'Rubik', 'Heebo', sans-serif;
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 2px;
+  }
+  .form-wrap .form-sub{
+    color: var(--muted);
+    font-size: 0.88rem;
+    margin-bottom: 16px;
+  }
+  .fields{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 16px;
+    text-align: center;
+  }
+  .field{ margin-bottom: 12px; }
+  .field label{
+    display: block;
+    font-weight: 600;
+    font-size: 0.86rem;
+    margin-bottom: 5px;
+  }
+  .field input{
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 16px;
+    text-align: center;
+    color: var(--text);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1.5px solid rgba(245, 239, 224, 0.16);
+    border-radius: 12px;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .field input::placeholder{ color: rgba(157, 168, 159, 0.5); }
+  .field input:focus{
+    outline: none;
+    border-color: var(--emerald);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 0 0 3px rgba(52, 211, 153, 0.18);
+  }
+  .field input.invalid{ border-color: var(--ruby); }
+  .field input[type="tel"], .field input[type="email"], .field input[type="number"]{
+    direction: ltr;
+  }
+  .err{
+    display: none;
+    color: #F299A8;
+    font-size: 0.8rem;
+    margin-top: 5px;
+  }
+  .err.show{ display: block; }
+
+  .cta{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    margin-top: 2px;
+    padding: 14px 32px;
+    min-height: 50px;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1.06rem;
+    font-weight: 700;
+    color: #03130C;
+    background: linear-gradient(135deg, var(--emerald-deep) 0%, var(--emerald) 100%);
+    border: none;
+    border-radius: 13px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(52, 211, 153, 0.35);
+    transition: box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  .cta:hover{ filter: brightness(1.07); box-shadow: 0 10px 44px rgba(52, 211, 153, 0.55); }
+  .cta:focus-visible{ outline: 3px solid var(--ruby); outline-offset: 3px; }
+  .cta:disabled{ opacity: 0.6; cursor: wait; filter: none; }
+  .cta svg{ width: 20px; height: 20px; }
+  .form-note{
+    color: var(--muted);
+    font-size: 0.78rem;
+    margin-top: 10px;
+  }
+  .form-msg{
+    display: none;
+    padding: 14px;
+    border-radius: 11px;
+    margin-top: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .form-msg.success{
+    display: block;
+    background: rgba(52, 211, 153, 0.1);
+    border: 1px solid rgba(52, 211, 153, 0.4);
+    color: #7DE8C3;
+  }
+  .form-msg.error{
+    display: block;
+    background: rgba(225, 64, 90, 0.1);
+    border: 1px solid rgba(225, 64, 90, 0.4);
+    color: #F299A8;
+  }
+
+  .foot{
+    color: var(--muted);
+    font-size: 0.72rem;
+    opacity: 0.8;
+    padding-top: 10px;
+    max-width: 90ch;
+    margin: 0 auto;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cine, .cine-card, .cine-btn{ animation: none; opacity: 1; transform: none; filter: none; }
+    .form-wrap::after{ animation: none; opacity: 0; }
+    *{ transition-duration: 0.01ms !important; }
+  }
+
+  @media (max-width: 1023px){
+    body{ overflow-x: hidden; overflow-y: auto; }
+    .shell{ height: auto; min-height: 100svh; padding: 44px 22px 20px; }
+  }
+  @media (max-width: 560px){
+    .fields{ grid-template-columns: 1fr; }
+    .bullets{ flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="waves" aria-hidden="true"></canvas>
+<div class="bg-overlay" aria-hidden="true"></div>
+
+<div class="shell">
+  <div class="stage">
+
+    <span class="eyebrow cine" style="--d:0.15s">שיעור חינם עם גבריאל, סוחר יומי פעיל</span>
+    <h1>
+      <span class="cine" style="--d:0.4s; display:inline-block">קבלו <span class="accent">שיעור חינם</span></span>
+      <span class="cine" style="--d:0.7s; display:inline-block">על <span class="highlight">מסחר יומי</span></span>
+    </h1>
+    <p class="sub cine" style="--d:1s">
+      בשיעור קצר וממוקד תלמדו שיעורים על מסחר ועל החיים שאף אחד אחר לא מלמד אתכם.
+      מלאו את הפרטים בכרטיס שלמטה וקבלו גישה מיידית, ללא עלות.
+    </p>
+    <ul class="bullets">
+      <li class="cine" style="--d:1.3s">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 11l3-3 2 2 4-4"/></svg></span>
+        שיעורים על מסחר שלא תמצאו בשום מקום אחר
+      </li>
+      <li class="cine" style="--d:1.45s">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
+        תובנות על החיים שמשנות את הדרך שבה אתם חושבים
+      </li>
+      <li class="cine" style="--d:1.6s">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></span>
+        ידע אמיתי מסוחר פעיל
+      </li>
+    </ul>
+
+    <form class="form-wrap cine-card" style="--d:1.8s" id="leadForm" action="https://formsubmit.co/PLACEHOLDER@EMAIL.COM" method="POST" novalidate>
+      <h2 class="cine" style="--d:2.1s">קבלו גישה מיידית לשיעור</h2>
+      <p class="form-sub cine" style="--d:2.25s">מלאו את הפרטים וקבלו את השיעור החינמי ללא המתנה.</p>
+
+      <input type="hidden" name="_subject" value="ליד חדש מדף הנחיתה — המסע למסחר יומי">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="text" name="_honey" style="display:none" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+      <div class="fields">
+        <div class="field cine" style="--d:2.4s">
+          <label for="fullname">שם מלא</label>
+          <input type="text" id="fullname" name="שם מלא" placeholder="ישראל ישראלי" autocomplete="name" required>
+          <p class="err" id="err-fullname">נא להזין שם מלא (לפחות 2 תווים)</p>
+        </div>
+
+        <div class="field cine" style="--d:2.55s">
+          <label for="age">גיל</label>
+          <input type="number" id="age" name="גיל" placeholder="23" min="16" max="99" inputmode="numeric" required>
+          <p class="err" id="err-age">נא להזין גיל בין 16 ל-99</p>
+        </div>
+
+        <div class="field cine" style="--d:2.7s">
+          <label for="phone">מספר טלפון</label>
+          <input type="tel" id="phone" name="טלפון" placeholder="050-1234567" autocomplete="tel" inputmode="tel" required>
+          <p class="err" id="err-phone">נא להזין מספר טלפון ישראלי תקין (לדוגמה: 050-1234567)</p>
+        </div>
+
+        <div class="field cine" style="--d:2.85s">
+          <label for="email">כתובת Gmail</label>
+          <input type="email" id="email" name="אימייל" placeholder="name@gmail.com" autocomplete="email" required>
+          <p class="err" id="err-email">נא להזין כתובת אימייל תקינה</p>
+        </div>
+      </div>
+
+      <button type="submit" class="cta cine-btn" style="--d:3.1s" id="submitBtn">
+        קבלו את השיעור החינמי עכשיו
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+      </button>
+
+      <p class="form-msg" id="formMsg" role="status" aria-live="polite"></p>
+    </form>
+  </div>
+
+  <p class="foot cine" style="--d:3.5s">
+    © 2026 · גילוי נאות: מסחר בשוק ההון כרוך בסיכון ואינו מתאים לכל אדם.
+    אין באמור ייעוץ השקעות. תוצאות העבר אינן מבטיחות תשואה עתידית.
+  </p>
+</div>
+
+<script>
+(function(){
+  'use strict';
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  var canvas = document.getElementById('waves');
+  var ctx = canvas.getContext('2d');
+  var W = 0, H = 0;
+
+  function resize(){
+    var dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = window.innerWidth;
+    H = window.innerHeight;
+    canvas.width = Math.round(W * dpr);
+    canvas.height = Math.round(H * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  resize();
+
+  var layers = [
+    { base: 0.16, amp: 34, wl: 0.0036, sp: 0.10, amp2: 18, wl2: 0.0013, sp2: 0.05,  col: '225, 64, 90',   a: 0.17, fill: 'up'   },
+    { base: 0.30, amp: 46, wl: 0.0028, sp: 0.14, amp2: 26, wl2: 0.0009, sp2: 0.07,  col: '16, 185, 129',  a: 0.17, fill: 'up'   },
+    { base: 0.62, amp: 52, wl: 0.0031, sp: 0.12, amp2: 30, wl2: 0.0011, sp2: 0.06,  col: '16, 185, 129',  a: 0.21, fill: 'down' },
+    { base: 0.72, amp: 44, wl: 0.0042, sp: 0.17, amp2: 24, wl2: 0.0014, sp2: 0.09,  col: '52, 211, 153',  a: 0.24, fill: 'down' },
+    { base: 0.82, amp: 38, wl: 0.0052, sp: 0.22, amp2: 20, wl2: 0.0017, sp2: 0.11,  col: '225, 64, 90',   a: 0.18, fill: 'down' },
+    { base: 0.90, amp: 26, wl: 0.0064, sp: 0.28, amp2: 14, wl2: 0.0021, sp2: 0.14,  col: '245, 239, 224', a: 0.11, fill: 'down' }
+  ];
+
+  function waveY(L, x, t){
+    return H * L.base
+      + Math.sin(x * L.wl + t * L.sp * Math.PI * 2) * L.amp
+      + Math.sin(x * L.wl2 - t * L.sp2 * Math.PI * 2 + 1.7) * L.amp2
+      + Math.sin(t * 0.21 + L.base * 9) * 9;
+  }
+
+  function drawLayer(L, t){
+    var step = 8;
+    ctx.beginPath();
+    ctx.moveTo(-step, waveY(L, -step, t));
+    for (var x = 0; x <= W + step; x += step){
+      ctx.lineTo(x, waveY(L, x, t));
+    }
+    ctx.strokeStyle = 'rgba(' + L.col + ', ' + (L.a * 2.6).toFixed(3) + ')';
+    ctx.lineWidth = 1.6;
+    ctx.shadowColor = 'rgba(' + L.col + ', 0.55)';
+    ctx.shadowBlur = reduceMotion ? 0 : 16;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    var yTop = H * L.base - L.amp - L.amp2 - 12;
+    var yBot = H * L.base + L.amp + L.amp2 + 12;
+    var g;
+    if (L.fill === 'down'){
+      ctx.lineTo(W + step, H + 10);
+      ctx.lineTo(-step, H + 10);
+      g = ctx.createLinearGradient(0, yTop, 0, H);
+      g.addColorStop(0, 'rgba(' + L.col + ', ' + L.a.toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(' + L.col + ', 0)');
+    } else {
+      ctx.lineTo(W + step, -10);
+      ctx.lineTo(-step, -10);
+      g = ctx.createLinearGradient(0, yBot, 0, 0);
+      g.addColorStop(0, 'rgba(' + L.col + ', ' + L.a.toFixed(3) + ')');
+      g.addColorStop(1, 'rgba(' + L.col + ', 0)');
+    }
+    ctx.closePath();
+    ctx.fillStyle = g;
+    ctx.fill();
+  }
+
+  var dust = [];
+  for (var d = 0; d < 42; d++){
+    dust.push({
+      x: Math.random(), y: Math.random(),
+      r: 0.6 + Math.random() * 1.5,
+      sp: 0.004 + Math.random() * 0.01,
+      ph: Math.random() * Math.PI * 2
+    });
+  }
+  function drawDust(t){
+    for (var i = 0; i < dust.length; i++){
+      var p = dust[i];
+      var px = (p.x + t * p.sp) % 1;
+      var py = p.y + Math.sin(t * 0.4 + p.ph) * 0.012;
+      var tw = 0.35 + 0.65 * (0.5 + 0.5 * Math.sin(t * 1.4 + p.ph * 3));
+      ctx.fillStyle = 'rgba(245, 239, 224, ' + (0.16 * tw).toFixed(3) + ')';
+      ctx.beginPath();
+      ctx.arc(px * W, py * H, p.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  var grainTile = document.createElement('canvas');
+  grainTile.width = grainTile.height = 128;
+  (function(){
+    var gctx = grainTile.getContext('2d');
+    var img = gctx.createImageData(128, 128);
+    for (var i = 0; i < img.data.length; i += 4){
+      var v = (Math.random() * 255) | 0;
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+      img.data[i + 3] = 255;
+    }
+    gctx.putImageData(img, 0, 0);
+  })();
+  var grainPattern = ctx.createPattern(grainTile, 'repeat');
+
+  function drawFrame(now){
+    var t = now / 1000;
+    ctx.clearRect(0, 0, W, H);
+
+    var glow = ctx.createRadialGradient(W / 2, H * 0.55, 0, W / 2, H * 0.55, Math.max(W, H) * 0.6);
+    glow.addColorStop(0, 'rgba(16, 185, 129, 0.05)');
+    glow.addColorStop(1, 'rgba(16, 185, 129, 0)');
+    ctx.fillStyle = glow;
+    ctx.fillRect(0, 0, W, H);
+
+    for (var i = 0; i < layers.length; i++) drawLayer(layers[i], reduceMotion ? 0 : t);
+    if (!reduceMotion) drawDust(t);
+
+    if (!reduceMotion){
+      var cycle = (t % 9) / 9;
+      var sx = cycle * (W * 1.8) - W * 0.4;
+      ctx.save();
+      ctx.translate(sx, H / 2);
+      ctx.rotate(-0.35);
+      var sw = 200;
+      var sg = ctx.createLinearGradient(-sw, 0, sw, 0);
+      sg.addColorStop(0, 'rgba(245, 239, 224, 0)');
+      sg.addColorStop(0.5, 'rgba(245, 239, 224, 0.04)');
+      sg.addColorStop(1, 'rgba(245, 239, 224, 0)');
+      ctx.fillStyle = sg;
+      ctx.fillRect(-sw, -H * 1.2, sw * 2, H * 2.4);
+      ctx.restore();
+    }
+
+    var vg = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.35, W / 2, H / 2, Math.max(W, H) * 0.75);
+    vg.addColorStop(0, 'rgba(5, 8, 7, 0)');
+    vg.addColorStop(1, 'rgba(5, 8, 7, 0.6)');
+    ctx.fillStyle = vg;
+    ctx.fillRect(0, 0, W, H);
+
+    if (grainPattern){
+      ctx.save();
+      ctx.globalAlpha = 0.05;
+      var ox = reduceMotion ? 0 : (Math.random() * 128) | 0;
+      var oy = reduceMotion ? 0 : (Math.random() * 128) | 0;
+      ctx.translate(-ox, -oy);
+      ctx.fillStyle = grainPattern;
+      ctx.fillRect(0, 0, W + 128, H + 128);
+      ctx.restore();
+    }
+  }
+
+  var rafId = null;
+  function loop(now){
+    drawFrame(now);
+    rafId = requestAnimationFrame(loop);
+  }
+  drawFrame(performance.now());
+  window.addEventListener('resize', function(){ resize(); drawFrame(performance.now()); });
+
+  if (!reduceMotion){
+    rafId = requestAnimationFrame(loop);
+    document.addEventListener('visibilitychange', function(){
+      if (document.hidden){
+        if (rafId){ cancelAnimationFrame(rafId); rafId = null; }
+      } else if (!rafId){
+        rafId = requestAnimationFrame(loop);
+      }
+    });
+  }
+
+  var form = document.getElementById('leadForm');
+  var btn = document.getElementById('submitBtn');
+  var msg = document.getElementById('formMsg');
+  var btnHTML = btn.innerHTML;
+
+  function setErr(id, show){
+    var input = document.getElementById(id);
+    var err = document.getElementById('err-' + id);
+    input.classList.toggle('invalid', show);
+    err.classList.toggle('show', show);
+    if (show) input.setAttribute('aria-invalid', 'true');
+    else input.removeAttribute('aria-invalid');
+  }
+
+  function validate(){
+    var ok = true;
+    var name = document.getElementById('fullname').value.trim();
+    var bad = name.length < 2;
+    setErr('fullname', bad); if (bad) ok = false;
+
+    var age = parseInt(document.getElementById('age').value, 10);
+    bad = !(age >= 16 && age <= 99);
+    setErr('age', bad); if (bad) ok = false;
+
+    var phone = document.getElementById('phone').value.replace(/[\s\-()]/g, '');
+    bad = !/^0(5\d{8}|[2-489]\d{7})$/.test(phone);
+    setErr('phone', bad); if (bad) ok = false;
+
+    var email = document.getElementById('email').value.trim();
+    bad = !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email);
+    setErr('email', bad); if (bad) ok = false;
+
+    return ok;
+  }
+
+  ['fullname', 'age', 'phone', 'email'].forEach(function(id){
+    document.getElementById(id).addEventListener('input', function(){ setErr(id, false); });
+  });
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    msg.className = 'form-msg';
+    msg.textContent = '';
+    if (!validate()){
+      var firstBad = form.querySelector('.invalid');
+      if (firstBad) firstBad.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = 'שולח...';
+
+    var endpoint = form.action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+    var data = new FormData(form);
+
+    fetch(endpoint, {
+      method: 'POST',
+      body: data,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      return res.json();
+    }).then(function(){
+      form.querySelectorAll('.fields, button[type="submit"]').forEach(function(el){ el.style.display = 'none'; });
+      msg.className = 'form-msg success';
+      msg.textContent = 'הפרטים נשלחו בהצלחה! גבריאל ייצור איתך קשר בקרוב.';
+    }).catch(function(){
+      btn.disabled = false;
+      btn.innerHTML = btnHTML;
+      msg.className = 'form-msg error';
+      msg.textContent = 'משהו השתבש בשליחה. נסה שוב בעוד רגע, או רענן את הדף.';
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
